@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import './App.css'
+import "./App.css";
 
 export default function TimerApp() {
   const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
   const [remainingSeconds, setRemainingSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
@@ -20,8 +21,8 @@ export default function TimerApp() {
   }, [isRunning, remainingSeconds]);
 
   const startTimer = () => {
-    if (minutes > 0) {
-      setRemainingSeconds(minutes * 60);
+    if (minutes > 0 || seconds > 0) {
+      setRemainingSeconds(minutes * 60 + seconds);
       setIsRunning(true);
     }
   };
@@ -30,19 +31,27 @@ export default function TimerApp() {
   const displaySeconds = remainingSeconds % 60;
 
   return (
-    <div className="container">
-      <h2 className="h2">Contador de Minutos</h2>
-      <input className="input"
+    <div className="timer-container">
+      <h2>Contador de Tempo</h2>
+       Minutos <input
         type="number"
         value={minutes}
         onChange={(e) => setMinutes(parseInt(e.target.value) || 0)}
         disabled={isRunning}
-        placeholder="Digite os minutos"
+        placeholder="Minutos"
+      /> 
+
+       Segundos <input
+        type="number"
+        value={seconds}
+        onChange={(e) => setSeconds(parseInt(e.target.value) || 0)}
+        disabled={isRunning}
+        placeholder="Segundos"
       />
-      <button className="button" onClick={startTimer} disabled={isRunning || minutes <= 0}>
+      <button onClick={startTimer} disabled={isRunning || (minutes <= 0 && seconds <= 0)}>
         Iniciar
       </button>
-      <h3 className="h3">Tempo restante: {displayMinutes} min, {displaySeconds} seg</h3>
+      <h3>Tempo restante: {displayMinutes} min, {displaySeconds} seg</h3>
     </div>
   );
 }
